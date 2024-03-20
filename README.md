@@ -3,12 +3,6 @@ This web app utilizes deep learning technology to classify birds based on the im
 This app is developed using Flask and basic web development tools like HTML and CSS.
 
 **How to use the application**
-1) install python
-2) install the following packages:
-   a) flask
-   b) tensorflow
-   c) opencv-python
-   d) Werkzeug
-   e) numpy
-
-3) run the project using flask command
+1) Install python
+2) Install all the necessary packages using the requirements.txt file
+3) Run the project using Flask app run command

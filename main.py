@@ -2,11 +2,9 @@ from flask import Flask, flash, render_template, request, redirect, url_for, jso
 from werkzeug.utils import secure_filename
 import os
 import sys
-import pickle
 import cv2
 import json
 import numpy as np
-import matplotlib.pyplot as plt
 from tensorflow.python import keras
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator

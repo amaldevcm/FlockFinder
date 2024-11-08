@@ -6,3 +6,5 @@ This app is developed using Flask and basic web development tools like HTML and 
 1) Install python
 2) Install all the necessary packages using the requirements.txt file
 3) Run the project using Flask app run command
+
+![BirdWatcher](https://github.com/user-attachments/assets/04b0602a-92b9-437e-acc3-ac3d74544ef8)

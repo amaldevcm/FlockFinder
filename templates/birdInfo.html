@@ -27,7 +27,7 @@
     <section class="bird-details">
         <div>
             <h2>{{data.name}}</h2>
-            <i>{{data.taxonomy.scientific_name}}</i><br>
+            <i>{{data.scientific_name}}</i><br>
 
             <div class="detail-container">
                 <div>
@@ -37,12 +37,12 @@
 
                 <div>
                     <h3>Habitat</h3>
-                    <span>{{data.characteristics.habitat}}</span>
+                    <span>{{data.habitat}}</span>
                 </div>
 
                 <div>
                     <h3>Wingspan</h3>
-                    <span>{{data.characteristics.wingspan}}</span>
+                    <span>{{data.wingspan}}</span>
                 </div>
 
                 <div>
@@ -57,47 +57,46 @@
 
                 <div>
                     <h3>Lifespan</h3>
-                    <span>{{data.characteristics.lifespan}}</span>
+                    <span>{{data.lifespan}}</span>
                 </div>
 
                 <div>
                     <h3>Estimated Population</h3>
-                    <span>{{data.characteristics.estimated_population_size}}</span>
+                    <span>{{data.estimated_population_size}}</span>
                 </div>
             </div>
         </div>
         <div>
-            <img src="{{data.img}}" alt="">
+            <img src="{{data.img}}" alt="bird img">
         </div>
     </section>
 
-    <!-- <section>
-        {{data}}
-    </section> -->
 </body>
+
 <script>
-    let locationArr = '{{data.characteristics.location}}'
+    const result = {{ data | safe}};             // processing received data
+    console.log(result);
+    
     let locationEle = document.getElementById('location-element');
-    for( let i of locationArr.split(',')){
+    result.location.forEach(loc => {
         let ele = document.createElement('li');
-        ele.innerText = i;
+        ele.innerText = loc;
         locationEle.append(ele)
-    }
+    });
 
     let featureEle = document.getElementById('distinct-features');
-    let featureArr = '{{data.characteristics.most_distinctive_feature}}';
-    for(let i of featureArr.split(',')){
+    result.most_distinctive_feature.forEach(feature => {
         let ele = document.createElement('li');
-        ele.innerText = i;
+        ele.innerText = feature;
         featureEle.append(ele);
-    }
+    });
 
-    let threatArr = '{{data.characteristics.biggest_threat}}';
     let threatEle = document.getElementById('threats');
-    for(let i of threatArr.split(',')){
+    result.biggest_threat.forEach(threat => {
         let ele = document.createElement('li');
-        ele.innerText = i;
+        ele.innerText = threat;
         threatEle.append(ele);
-    }
+    });
+        
 </script>
 </html>

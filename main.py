@@ -102,10 +102,10 @@ Rules:
 
 def getInfo(name):
     animal_api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(name)
-    response = requests.get(animal_api_url, headers={'X-Api-Key': 'GqOcjTFCs/8JGu3jrb8z3A==VnkDnU3PJIDfv7QO'})
+    response = requests.get(animal_api_url, headers={'X-Api-Key': os.getenv("ANIMALS_API_KEY")})
     if response.status_code == requests.codes.ok:
         data = json.loads(response.text)
-        print(type(data))
+        # print(type(data), data)
         return data
     else:
         print("Error:", response.status_code, response.text)
@@ -122,12 +122,12 @@ def classifyBird(filename):
 
     y_pred = model.predict(img)
     pred = np.argmax(y_pred,axis=1)
-    print('prediction: ', pred, file=sys.stderr)
+    # print('prediction: ', pred, file=sys.stderr)
     # Map the label
     labels = (train_data.class_indices)
     labels = dict((v,k) for k,v in labels.items())
     pred = [labels[k] for k in pred]
-    print(pred[0])
+    print('Prediction: ',pred[0])
     global classifiedBird
     classifiedBird = pred[0]
     return pred[0]
@@ -135,39 +135,48 @@ def classifyBird(filename):
 
 @app.route("/", methods=['GET', 'POST'])
 def classify():
-    birdname = 'pigeon'
+    birdname = ''
     if request.method == 'GET':
         return render_template('main.html', name=birdname, display='none')
     else:
+        # print('post called', file=sys.stderr)
         if 'file' not in request.files:
+            # print('not in extensions', file=sys.stderr)
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
 
         if file.filename == '':
+            # print('empty filename', file=sys.stderr)
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
+            print('allowed file called', file=sys.stderr)
             filename = secure_filename(file.filename)
+            print(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
-            birdInfoLLM = getInfoLLM(birdname)
-            print("\n Gpt output: \n", json.dumps(birdInfoLLM))
-            if(type(birdInfoLLM) is not dict):
-                return render_template('error.html')
+            birdname = classifyBird(filename)
+            birdInfo = getInfo(birdname)
 
-            birdInfoLLM['img'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            return render_template('birdInfo.html', data=birdInfoLLM)
+            if(birdInfo == 'error'):
+                return render_template('error.html', display='none')
+
+            if(len(birdInfo) == 0):
+                return render_template('main.html', display='none')
+
+            birdInfo[0]['img'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            print(birdInfo)
+            return render_template('birdInfo.html', data=birdInfo[0])
 
         
 
 @app.route("/info", methods=['GET'])
 def showInfo():
-    # print('classified bird: ',classifiedBird)
+    print('classified bird: ',classifiedBird)
     birdInfo = getInfo(classifiedBird)
     filename = 'NICOBAR-PIGEON.jpg'
     if(birdInfo == 'error'):
-        return render_template('main.html', display='none')
+        return render_template('error.html', display='none')
 
     if(len(birdInfo) == 0):
         return render_template('main.html', display='none')

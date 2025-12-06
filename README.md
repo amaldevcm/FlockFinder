@@ -29,5 +29,5 @@ FlockFinder uses a custom Convolutional Neural Network (CNN) trained on a large 
 **How to use the application**
 1) Install python
 2) Install all the necessary packages using the requirements.txt file
-3) Run the project using Flask app run command ``` flask --app FlockFinder run ```
+3) Run the project using Flask app run command ``` flask --app main.py run ```
 
